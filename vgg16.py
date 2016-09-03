@@ -257,7 +257,7 @@ if __name__ == '__main__':
     imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
     vgg = vgg16(imgs, 'vgg16_weights.npz', sess)
 
-    img1 = imread('laska.png')
+    img1 = imread('f860ad81767029d91fdc5f18a3d06f8b.jpg')
     img1 = imresize(img1, (224, 224))[:,:,:3]
 
     prob = sess.run(vgg.probs, feed_dict={vgg.imgs: [img1]})[0]
