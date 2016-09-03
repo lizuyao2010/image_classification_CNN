@@ -3,6 +3,7 @@ import json
 import csv
 from scipy import misc
 import numpy as np
+import matplotlib.pyplot as plt
 
 out=open('records.csv','wb')
 wr=csv.writer(out,quoting=csv.QUOTE_ALL)
@@ -37,9 +38,11 @@ def resize_image(img):
 
 def main():
     # connect_datapoint('https://test.flaunt.peekabuy.com/api/board/get_jc_product_images_batch/?page=')
-    img=misc.imread('laska.png')
+    img=misc.imread('f860ad81767029d91fdc5f18a3d06f8b.jpg')
     print img.shape
-    img=resize_image(img)
+    img=resize_image(img)[:,:,:3]
+    plt.imshow(img)
+    plt.show()
     print img.shape
 
 if __name__=='__main__':
