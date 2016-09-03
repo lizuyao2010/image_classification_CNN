@@ -73,8 +73,8 @@ def downloadImages(outputFolder,source):
 
 def main():
     # connect_datapoint('https://test.flaunt.peekabuy.com/api/board/get_jc_product_images_batch/?page=')
-    # downloadImages('images/','records.csv')
-    resize_images_in_folder('images','images_resized')
+    downloadImages('images/','records.csv')
+    # resize_images_in_folder('images','images_resized')
 
 if __name__=='__main__':
     main()
