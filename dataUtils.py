@@ -37,13 +37,13 @@ def resize_image(img):
     return img
 
 def main():
-    # connect_datapoint('https://test.flaunt.peekabuy.com/api/board/get_jc_product_images_batch/?page=')
-    img=misc.imread('f860ad81767029d91fdc5f18a3d06f8b.jpg')
-    print img.shape
-    img=resize_image(img)[:,:,:3]
-    plt.imshow(img)
-    plt.show()
-    print img.shape
+    connect_datapoint('https://test.flaunt.peekabuy.com/api/board/get_jc_product_images_batch/?page=')
+    # img=misc.imread('f860ad81767029d91fdc5f18a3d06f8b.jpg')
+    # print img.shape
+    # img=resize_image(img)[:,:,:3]
+    # plt.imshow(img)
+    # plt.show()
+    # print img.shape
 
 if __name__=='__main__':
     main()
