@@ -260,7 +260,9 @@ if __name__ == '__main__':
     img1 = imread('f860ad81767029d91fdc5f18a3d06f8b.jpg')
     img1 = imresize(img1, (224, 224))[:,:,:3]
 
-    prob = sess.run(vgg.probs, feed_dict={vgg.imgs: [img1]})[0]
-    preds = (np.argsort(prob)[::-1])[0:5]
-    for p in preds:
-        print class_names[p], prob[p]
+    # prob = sess.run(vgg.probs, feed_dict={vgg.imgs: [img1]})[0]
+    vgg_features=sess.run(vgg.fc2,feed_dict={vgg.imgs: [img1]})
+    print vgg_features.shape
+    # preds = (np.argsort(prob)[::-1])[0:5]
+    # for p in preds:
+    #     print class_names[p], prob[p]
