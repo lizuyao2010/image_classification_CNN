@@ -57,12 +57,13 @@ def extract_vgg_features_in_folder(inputfolder):
     imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
     vgg = vgg16(imgs, 'vgg16_weights.npz', sess)
     images=resize_images_in_folder(inputfolder)
-    batch_size=32
+    batch_size=16
     n=images.shape[0]
     batches = zip(range(0, n-batch_size, batch_size), range(batch_size, n, batch_size))
     batches = [(start, end) for start, end in batches]
     vgg_features=np.zeros((n,4096))
     for start,end in batches:
+        print(start,end)
         images_batch=images[start:end]
         vgg_features_batch=sess.run(vgg.fc2,feed_dict={vgg.imgs: images_batch})
         vgg_features[start:end,:]=vgg_features_batch
