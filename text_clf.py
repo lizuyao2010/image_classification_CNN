@@ -5,6 +5,16 @@ import pandas as pd
 import numpy as np
 from six.moves import range, reduce
 
+tf.flags.DEFINE_float("learning_rate", 0.01, "Learning rate for Adam Optimizer.")
+tf.flags.DEFINE_float("epsilon", 1e-8, "Epsilon value for Adam Optimizer.")
+tf.flags.DEFINE_float("l2", 0, "l2 normalization")
+tf.flags.DEFINE_integer("batch_size", 32, "Batch size for training.")
+tf.flags.DEFINE_integer("random_state", 1, "Random state.")
+tf.flags.DEFINE_integer("epochs", 200, "Number of epochs to train for.")
+tf.flags.DEFINE_integer("evaluation_interval", 10, "Evaluate and print results every x epochs")
+tf.flags.DEFINE_string("model_dir", "model/", "Directory containing memn2n model checkpoints")
+tf.flags.DEFINE_boolean('train', True, 'if True, begin to train')
+FLAGS = tf.flags.FLAGS
 
 class DataLoader(object):
     """docstring for DataLoader"""
@@ -74,8 +84,9 @@ class LinearClassfier(object):
         """
         feed_dict = {self.descriptions: descriptions, self.labels: labels}
         loss, _ = self.session.run([self.loss_op, self.train_op], feed_dict=feed_dict)
-        regularizers=tf.nn.l2_loss(self.W)
-        loss+=5e-4*regularizers
+        if FLAGS.l2:
+            regularizers=tf.nn.l2_loss(self.W)
+            loss+=FLAGS.l2*regularizers
         return loss
 
     def predict(self, descriptions):
@@ -105,15 +116,7 @@ def build_text_vocab(df):
 
 
 def main():
-    tf.flags.DEFINE_float("learning_rate", 0.01, "Learning rate for Adam Optimizer.")
-    tf.flags.DEFINE_float("epsilon", 1e-8, "Epsilon value for Adam Optimizer.")
-    tf.flags.DEFINE_integer("batch_size", 32, "Batch size for training.")
-    tf.flags.DEFINE_integer("random_state", 1, "Random state.")
-    tf.flags.DEFINE_integer("epochs", 200, "Number of epochs to train for.")
-    tf.flags.DEFINE_integer("evaluation_interval", 10, "Evaluate and print results every x epochs")
-    tf.flags.DEFINE_string("model_dir", "model/", "Directory containing memn2n model checkpoints")
-    tf.flags.DEFINE_boolean('train', True, 'if True, begin to train')
-    FLAGS = tf.flags.FLAGS
+
     df=pd.read_csv('records.csv', header=None)
     df[1]=df[1].str.lower()
     word2idx=build_text_vocab(df)
