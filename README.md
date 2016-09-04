@@ -28,7 +28,7 @@
 python clf.py
 ```
 
-* Results:
+### Results:
 
 Features	|  Training Accuracy  |  Testing Accuracy  
 ------------|---------------------|-------------------
