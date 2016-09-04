@@ -44,7 +44,7 @@ def resize_images_in_folder(inputfolder):
     images=np.zeros((len(all_image_files),224,224,3),dtype=np.uint8)
     for i,f in enumerate(all_image_files):
         print i
-        if i<28504:
+        if i<32999:
             continue
         inputpath=join(inputfolder,f)
         index=int(f.rstrip('.jpg'))
