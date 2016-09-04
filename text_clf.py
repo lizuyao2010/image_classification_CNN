@@ -1,5 +1,5 @@
 from dataUtils import *
-from sklearn import metrics
+from sklearn import metrics,cross_validation
 import tensorflow as tf
 from six.moves import range, reduce
 
@@ -107,6 +107,8 @@ def main():
     tf.flags.DEFINE_integer("random_state", None, "Random state.")
     tf.flags.DEFINE_integer("epochs", 200, "Number of epochs to train for.")
     tf.flags.DEFINE_integer("evaluation_interval", 10, "Evaluate and print results every x epochs")
+    tf.flags.DEFINE_string("model_dir", "model/", "Directory containing memn2n model checkpoints")
+    tf.flags.DEFINE_boolean('train', True, 'if True, begin to train')
     FLAGS = tf.flags.FLAGS
     df=pd.read_csv('records.csv', header=None)
     df[1]=df[1].str.lower()
@@ -118,34 +120,57 @@ def main():
     print "labels shape:",labels.shape
     optimizer = tf.train.AdamOptimizer(learning_rate=FLAGS.learning_rate, epsilon=FLAGS.epsilon)
     batch_size = FLAGS.batch_size
-    n_train=len(data)
-    train_labels = np.argmax(labels, axis=1)
+    trainData, testData, trainLabelsVec, testLabels = cross_validation.train_test_split(data,labels, test_size=.1, random_state=FLAGS.random_state)
+    n_train=len(trainData)
+    train_labels = np.argmax(trainLabelsVec, axis=1)
+    test_labels = np.argmax(testLabels, axis=1)
     batches = zip(range(0, n_train-batch_size, batch_size), range(batch_size, n_train, batch_size))
     batches = [(start, end) for start, end in batches]
     with tf.Session() as sess:
         model=LinearClassfier(batch_size,dataLoader.vocab_size,dataLoader.num_classes,sess,optimizer=optimizer)
-        for t in range(1,FLAGS.epochs):
-            np.random.shuffle(batches)
-            total_cost=0.0
-            for start,end in batches:
-                data_batch=data[start:end]
-                label_batch=labels[start:end]
-                cost_t=model.batch_fit(data_batch,label_batch)
-                total_cost+=cost_t
-            if t%FLAGS.evaluation_interval==0:
-                train_preds=[]
-                for start in range(0,n_train,batch_size):
-                    end=start+batch_size
-                    data_batch=data[start:end]
-                    label_batch=labels[start:end]
-                    pred_batch=model.predict(data_batch)
-                    train_preds+=list(pred_batch)
-                train_acc=metrics.accuracy_score(np.array(train_preds),train_labels)
-                print('-----------------------')
-                print('Epoch', t)
-                print('Total Cost:', total_cost)
-                print('Training Accuracy:', train_acc)
-                print('-----------------------')
+        best_test_accuracy=0
+        saver = tf.train.Saver(max_to_keep=50)
+        if FLAGS.train:
+            for t in range(1,FLAGS.epochs):
+                np.random.shuffle(batches)
+                total_cost=0.0
+                for start,end in batches:
+                    data_batch=trainData[start:end]
+                    label_batch=trainLabelsVec[start:end]
+                    cost_t=model.batch_fit(data_batch,label_batch)
+                    total_cost+=cost_t
+                if t%FLAGS.evaluation_interval==0:
+                    train_preds=[]
+                    for start in range(0,n_train,batch_size):
+                        end=start+batch_size
+                        data_batch=trainData[start:end]
+                        label_batch=trainLabelsVec[start:end]
+                        pred_batch=model.predict(data_batch)
+                        train_preds+=list(pred_batch)
+                    train_acc=metrics.accuracy_score(np.array(train_preds),train_labels)
+                    test_preds=model.predict(testData)
+                    test_acc=metrics.accuracy_score(test_preds,test_labels)
+                    print('-----------------------')
+                    print('Epoch', t)
+                    print('Total Cost:', total_cost)
+                    print('Training Accuracy:', train_acc)
+                    print('Testing Accuracy:', test_acc)
+                    print('-----------------------')
+                    if test_acc>best_test_accuracy:
+                        best_test_accuracy=test_acc
+                        saver.save(sess,FLAGS.model_dir+'model.ckpt',global_step=t)
+                    else:
+                        print("early stopping")
+                        break
+        else:
+            ckpt = tf.train.get_checkpoint_state(FLAGS.model_dir)
+            if ckpt and ckpt.model_checkpoint_path:
+                saver.restore(sess, ckpt.model_checkpoint_path)
+            else:
+                print("...no checkpoint found...")
+            test_preds = model.predict(testData)
+            test_acc = metrics.accuracy_score(test_preds, test_labels)
+            print("Testing Accuracy:", test_acc)
 
 if __name__=='__main__':
     main()
