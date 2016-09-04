@@ -42,7 +42,8 @@ def connect_datapoint(url):
 def resize_images_in_folder(inputfolder):
     all_image_files=[f for f in listdir(inputfolder) if isfile(join(inputfolder,f)) and f.endswith('.jpg')]
     images=np.zeros((len(all_image_files),224,224,3),dtype=np.uint8)
-    for f in all_image_files:
+    for i,f in enumerate(all_image_files):
+        print i
         inputpath=join(inputfolder,f)
         index=int(f.rstrip('.jpg'))
         img=resize_image_from_file(inputpath)
@@ -81,7 +82,6 @@ def resize_image_from_file(file):
     # print "origin shape",img.shape
     img=resize_image(img)[:,:,:3]
     # print "resized shape",img.shape
-    print file
     return img
 
 def downloadImages(outputFolder,source):
