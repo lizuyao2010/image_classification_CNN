@@ -78,9 +78,10 @@ def resize_image(img):
 
 def resize_image_from_file(file):
     img=misc.imread(file)
-    print "origin shape",img.shape
+    # print "origin shape",img.shape
     img=resize_image(img)[:,:,:3]
-    print "resized shape",img.shape
+    # print "resized shape",img.shape
+    print file
     return img
 
 def downloadImages(outputFolder,source):
