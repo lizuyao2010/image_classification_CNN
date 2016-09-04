@@ -99,9 +99,9 @@ def main():
     # connect_datapoint('https://test.flaunt.peekabuy.com/api/board/get_jc_product_images_batch/?page=')
     # downloadImages('images/','records.csv')
     # resize_images_in_folder('images','images_resized')
-    img_features=extract_vgg_features_in_folder('images')
-    print img_features[0]
-    img_features.dump("img_features.npy")
+    # img_features=extract_vgg_features_in_folder('images')
+    # print img_features[0]
+    # img_features.dump("img_features.npy")
 
 if __name__=='__main__':
     main()
