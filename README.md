@@ -1,4 +1,4 @@
-Thought:
+### Thought:
 * Pull all the data from endpoint
 * Preprocessing the data 
 
@@ -10,16 +10,23 @@ Thought:
 
 	VGG Net: http://www.cs.toronto.edu/~frossard/post/vgg16/
 
-* Code:
+### Code:
 	https://github.com/lizuyao2010/image_classification_CNN
 
-* Data:
+### Data:
 
 	data split: 10% as test 
 
 	Num of classes: 69 
 
 	Vocab size: 3505 
+
+### Examples
+
+
+```
+python text_clf.py
+```
 
 * Results:
 
