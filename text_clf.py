@@ -62,6 +62,9 @@ class LinearClassfier(object):
         cross_entropy=tf.nn.softmax_cross_entropy_with_logits(logits,tf.cast(self.labels,tf.float32),name="cross_entropy")
         cross_entropy_sum=tf.reduce_sum(cross_entropy,name="cross_entropy_sum")
         loss_op=cross_entropy_sum
+        if FLAGS.l2:
+            regularizers=tf.nn.l2_loss(self.W)
+            loss_op+=FLAGS.l2*regularizers
         grads_and_vars=self.optimizer.compute_gradients(loss_op)
         train_op=self.optimizer.apply_gradients(grads_and_vars,name="train_op")
         predict_op = tf.argmax(logits,1,name="predict_op")
@@ -84,9 +87,7 @@ class LinearClassfier(object):
         """
         feed_dict = {self.descriptions: descriptions, self.labels: labels}
         loss, _ = self.session.run([self.loss_op, self.train_op], feed_dict=feed_dict)
-        if FLAGS.l2:
-            regularizers=tf.nn.l2_loss(self.W)
-            loss+=FLAGS.l2*regularizers
+        
         return loss
 
     def predict(self, descriptions):
