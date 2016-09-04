@@ -102,6 +102,7 @@ def main():
     # img_features=extract_vgg_features_in_folder('images')
     # print img_features[0]
     # img_features.dump("img_features.npy")
+    None
 
 if __name__=='__main__':
     main()
