@@ -1,7 +1,7 @@
 Thought:
 * Pull all the data from endpoint
 * Preprocessing the data 
- 	Resize the image into a square image with dimension 224*224*3 
+ 	Resize the image into a square image with dimension 224,224,3 
 	Feed image into VGG Net to get VGG features(a 4096 dimension vector) 
 * Feed pretrained VGG features and description feature(bag of words) into a softmax classifier as baseline
 	VGG Net: http://www.cs.toronto.edu/~frossard/post/vgg16/
