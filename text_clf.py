@@ -1,6 +1,8 @@
 from dataUtils import tokenize
 from sklearn import metrics,cross_validation
 import tensorflow as tf
+import pandas as pd
+import numpy as np
 from six.moves import range, reduce
 
 
