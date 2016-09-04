@@ -47,8 +47,8 @@ class LinearClassfier(object):
         self.labels = tf.placeholder(tf.int32,[None,self.num_classes],name="labels")
         self.name=name
         with tf.variable_scope(self.name):
-            self.word_emb=tf.Variable(self.initializer([self.vocab_size,self.num_classes]),name='word_emb')
-        logits=tf.matmul(self.descriptions,self.word_emb)
+            self.W=tf.Variable(self.initializer([self.vocab_size,self.num_classes]),name='W')
+        logits=tf.matmul(self.descriptions,self.W)
         cross_entropy=tf.nn.softmax_cross_entropy_with_logits(logits,tf.cast(self.labels,tf.float32),name="cross_entropy")
         cross_entropy_sum=tf.reduce_sum(cross_entropy,name="cross_entropy_sum")
         loss_op=cross_entropy_sum
@@ -74,6 +74,8 @@ class LinearClassfier(object):
         """
         feed_dict = {self.descriptions: descriptions, self.labels: labels}
         loss, _ = self.session.run([self.loss_op, self.train_op], feed_dict=feed_dict)
+        regularizers=tf.nn.l2_loss(self.W)
+        loss+=5e-4*regularizers
         return loss
 
     def predict(self, descriptions):
