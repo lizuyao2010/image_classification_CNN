@@ -9,6 +9,8 @@ import pandas as pd
 from os import listdir
 from os.path import isfile, join
 import re
+from vgg16 import vgg16
+import tensorflow as tf
 
 def tokenize(sent):
     '''Return the tokens of a sentence including punctuation.
@@ -37,13 +39,31 @@ def connect_datapoint(url):
         else:
             break
 
-def resize_images_in_folder(inputfolder,outputfolder):
+def resize_images_in_folder(inputfolder):
     all_image_files=[f for f in listdir(inputfolder) if isfile(join(inputfolder,f)) and f.endswith('.jpg')]
+    images=np.zeros((len(all_image_files),224,224,3),dtype=np.uint8)
     for f in all_image_files:
         inputpath=join(inputfolder,f)
+        index=int(f.rstrip('.jpg'))
         img=resize_image_from_file(inputpath)
-        outpath=join(outputfolder,f)
-        misc.imsave(outpath,img)
+        images[index,:,:,:]=img
+    return images
+
+def extract_vgg_features_in_folder(inputfolder):
+    sess = tf.Session()
+    imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
+    vgg = vgg16(imgs, 'vgg16_weights.npz', sess)
+    images=resize_images_in_folder(inputfolder)
+    batch_size=1000
+    n=images.shape[0]
+    batches = zip(range(0, n-batch_size, batch_size), range(batch_size, n, batch_size))
+    batches = [(start, end) for start, end in batches]
+    vgg_features=np.zeros((n,4096))
+    for start,end in batches:
+        images_batch=images[start:end]
+        vgg_features_batch=sess.run(vgg.fc2,feed_dict={vgg.imgs: images_batch})
+        vgg_features[start:end,:]=vgg_features_batch
+    return vgg_features
 
 def resize_image(img):
     image_h, image_w, _ = np.shape(img)
@@ -60,8 +80,6 @@ def resize_image_from_file(file):
     img=misc.imread(file)
     print "origin shape",img.shape
     img=resize_image(img)[:,:,3]
-    # plt.imshow(img)
-    # plt.show()
     print "resized shape",img.shape
     return img
 
@@ -73,8 +91,11 @@ def downloadImages(outputFolder,source):
 
 def main():
     # connect_datapoint('https://test.flaunt.peekabuy.com/api/board/get_jc_product_images_batch/?page=')
-    downloadImages('images/','records.csv')
+    # downloadImages('images/','records.csv')
     # resize_images_in_folder('images','images_resized')
+    img_features=extract_vgg_features_in_folder('images')
+    print img_features[0]
+    img_features.dump("img_features.npy")
 
 if __name__=='__main__':
     main()

@@ -19,7 +19,7 @@ class vgg16:
         self.imgs = imgs
         self.convlayers()
         self.fc_layers()
-        self.probs = tf.nn.softmax(self.fc3l)
+        # self.probs = tf.nn.softmax(self.fc3l)
         if weights is not None and sess is not None:
             self.load_weights(weights, sess)
 
@@ -236,14 +236,14 @@ class vgg16:
             self.parameters += [fc2w, fc2b]
 
         # fc3
-        with tf.name_scope('fc3') as scope:
-            fc3w = tf.Variable(tf.truncated_normal([4096, 1000],
-                                                         dtype=tf.float32,
-                                                         stddev=1e-1), name='weights')
-            fc3b = tf.Variable(tf.constant(1.0, shape=[1000], dtype=tf.float32),
-                                 trainable=True, name='biases')
-            self.fc3l = tf.nn.bias_add(tf.matmul(self.fc2, fc3w), fc3b)
-            self.parameters += [fc3w, fc3b]
+        # with tf.name_scope('fc3') as scope:
+        #     fc3w = tf.Variable(tf.truncated_normal([4096, 1000],
+        #                                                  dtype=tf.float32,
+        #                                                  stddev=1e-1), name='weights')
+        #     fc3b = tf.Variable(tf.constant(1.0, shape=[1000], dtype=tf.float32),
+        #                          trainable=True, name='biases')
+        #     self.fc3l = tf.nn.bias_add(tf.matmul(self.fc2, fc3w), fc3b)
+        #     self.parameters += [fc3w, fc3b]
 
     def load_weights(self, weight_file, sess):
         weights = np.load(weight_file)
@@ -256,7 +256,7 @@ if __name__ == '__main__':
     sess = tf.Session()
     imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
     vgg = vgg16(imgs, 'vgg16_weights.npz', sess)
-
+    
     img1 = imread('f860ad81767029d91fdc5f18a3d06f8b.jpg')
     img1 = imresize(img1, (224, 224))[:,:,:3]
 
