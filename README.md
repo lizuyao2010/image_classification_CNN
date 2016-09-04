@@ -25,7 +25,7 @@
 
 
 ```
-python text_clf.py
+python clf.py
 ```
 
 * Results:
