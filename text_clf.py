@@ -104,7 +104,7 @@ def main():
     tf.flags.DEFINE_float("learning_rate", 0.01, "Learning rate for Adam Optimizer.")
     tf.flags.DEFINE_float("epsilon", 1e-8, "Epsilon value for Adam Optimizer.")
     tf.flags.DEFINE_integer("batch_size", 32, "Batch size for training.")
-    tf.flags.DEFINE_integer("random_state", None, "Random state.")
+    tf.flags.DEFINE_integer("random_state", 1, "Random state.")
     tf.flags.DEFINE_integer("epochs", 200, "Number of epochs to train for.")
     tf.flags.DEFINE_integer("evaluation_interval", 10, "Evaluate and print results every x epochs")
     tf.flags.DEFINE_string("model_dir", "model/", "Directory containing memn2n model checkpoints")
@@ -118,6 +118,7 @@ def main():
     data,labels=dataLoader.vectorize_text(df)
     print "data shape: ", data.shape
     print "labels shape:",labels.shape
+    tf.set_random_seed(FLAGS.random_state)
     optimizer = tf.train.AdamOptimizer(learning_rate=FLAGS.learning_rate, epsilon=FLAGS.epsilon)
     batch_size = FLAGS.batch_size
     trainData, testData, trainLabelsVec, testLabels = cross_validation.train_test_split(data,labels, test_size=.1, random_state=FLAGS.random_state)
