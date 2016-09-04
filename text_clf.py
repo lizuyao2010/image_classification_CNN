@@ -1,4 +1,4 @@
-from dataUtils import *
+from dataUtils import tokenize
 from sklearn import metrics,cross_validation
 import tensorflow as tf
 from six.moves import range, reduce
@@ -116,8 +116,9 @@ def main():
     label2id=build_label_vocab(df)
     dataLoader=DataLoader(word2idx,label2id)
     data,labels=dataLoader.vectorize_text(df)
-    dataLoader.vocab_size=4096
-    data=np.load('img_features.npy')
+    img_features=np.load('img_features.npy')
+    data=np.concatenate((data,img_features),axis=1)
+    dataLoader.vocab_size+=4096
     print "data shape: ", data.shape
     print "labels shape:",labels.shape
     tf.set_random_seed(FLAGS.random_state)
