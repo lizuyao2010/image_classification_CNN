@@ -116,6 +116,8 @@ def main():
     label2id=build_label_vocab(df)
     dataLoader=DataLoader(word2idx,label2id)
     data,labels=dataLoader.vectorize_text(df)
+    dataLoader.vocab_size=4096
+    data=np.load('img_features.npy')
     print "data shape: ", data.shape
     print "labels shape:",labels.shape
     tf.set_random_seed(FLAGS.random_state)
