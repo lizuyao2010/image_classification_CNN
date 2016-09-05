@@ -8,6 +8,7 @@ from six.moves import range, reduce
 tf.flags.DEFINE_float("learning_rate", 0.01, "Learning rate for Adam Optimizer.")
 tf.flags.DEFINE_float("epsilon", 1e-8, "Epsilon value for Adam Optimizer.")
 tf.flags.DEFINE_float("l2", 0, "l2 normalization")
+tf.flags.DEFINE_float("l1", 0, "l1 normalization")
 tf.flags.DEFINE_integer("batch_size", 32, "Batch size for training.")
 tf.flags.DEFINE_integer("random_state", 1, "Random state.")
 tf.flags.DEFINE_integer("epochs", 200, "Number of epochs to train for.")
@@ -67,8 +68,11 @@ class LinearClassfier(object):
         cross_entropy_sum=tf.reduce_sum(cross_entropy,name="cross_entropy_sum")
         loss_op=cross_entropy_sum
         if FLAGS.l2:
-            regularizers=tf.nn.l2_loss(self.W)
+            regularizers=tf.nn.l2_loss(self.W,name="l2_loss")
             loss_op+=FLAGS.l2*regularizers
+        if FLAGS.l1:
+            regularizers=tf.reduce_sum(tf.abs(self.W),name="l1_loss")
+            loss_op+=FLAGS.l1*regularizers
         grads_and_vars=self.optimizer.compute_gradients(loss_op)
         train_op=self.optimizer.apply_gradients(grads_and_vars,name="train_op")
         predict_op = tf.argmax(logits,1,name="predict_op")
