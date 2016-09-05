@@ -139,9 +139,10 @@ def main():
             img_features=img_features[notnullIndexes.values]
         if FLAGS.text_features:
             data=np.concatenate((data,img_features),axis=1)
+            dataLoader.vocab_size+=4096
         else:
             data=img_features
-        dataLoader.vocab_size+=4096
+            dataLoader.vocab_size=4096
     print "data shape: ", data.shape
     print "labels shape:",labels.shape
     tf.set_random_seed(FLAGS.random_state)
