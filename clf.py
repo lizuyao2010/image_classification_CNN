@@ -192,8 +192,9 @@ def main():
                         best_test_accuracy=test_acc
                         saver.save(sess,FLAGS.model_dir+'model.ckpt',global_step=t)
                     else:
-                        print("early stopping")
-                        break
+                        None
+                        # print("early stopping")
+                        # break
         else:
             ckpt = tf.train.get_checkpoint_state(FLAGS.model_dir)
             if ckpt and ckpt.model_checkpoint_path:

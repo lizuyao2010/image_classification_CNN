@@ -49,7 +49,7 @@ labels shape(33000,9)
 Features	|  Training Accuracy  |  Testing Accuracy  
 ------------|---------------------|-------------------
 Text     	|  0.56	              |  0.56		          
-Image     	|  0.93               |  0.85		          
+Image     	|  0.94               |  0.85		          
 Text+Image  |  0.98               |  0.89		
 
 ### remove null descriptions:
@@ -59,8 +59,8 @@ labels shape(18163,65)
 Features	|  Training Accuracy  |  Testing Accuracy  
 ------------|---------------------|-------------------
 Text        | 0.97     			  |  0.92
+Image       | 0.93     			  |  0.78
 Text+Image  | 0.97                |  0.82		 
-Text        | 0.93     			  |  0.78
 
 main categories:
 
