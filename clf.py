@@ -14,6 +14,9 @@ tf.flags.DEFINE_integer("epochs", 200, "Number of epochs to train for.")
 tf.flags.DEFINE_integer("evaluation_interval", 10, "Evaluate and print results every x epochs")
 tf.flags.DEFINE_string("model_dir", "model/", "Directory containing memn2n model checkpoints")
 tf.flags.DEFINE_boolean('train', True, 'if True, begin to train')
+tf.flags.DEFINE_boolean('main_categories', True, 'if True, use main_catogries')
+tf.flags.DEFINE_boolean('image_features', True, 'if True, use image_features')
+tf.flags.DEFINE_boolean('filter_null', False, 'if True, use filter null values in records')
 FLAGS = tf.flags.FLAGS
 
 class DataLoader(object):
@@ -118,19 +121,26 @@ def build_text_vocab(df):
 
 def main():
     df=pd.read_csv('records.csv', header=None)
-    # notnullIndexes=df[1].notnull()
-    # df=df[notnullIndexes]
+    if FLAGS.filter_null:
+        notnullIndexes=df[1].notnull()
+        df=df[notnullIndexes]
     df[1]=df[1].str.lower()
     word2idx=build_text_vocab(df)
-    # label2id=build_label_vocab(df)
-    label2id=build_category_map('main_categories.csv')
+    if FLAGS.main_categories:
+        label2id=build_category_map('main_categories.csv')
+    else:
+        label2id=build_label_vocab(df)
     dataLoader=DataLoader(word2idx,label2id)
     data,labels=dataLoader.vectorize_text(df)
-    img_features=np.load('img_features.npy')
-    # img_features=img_features[notnullIndexes.values]
-    data=np.concatenate((data,img_features),axis=1)
-    # data=img_features
-    dataLoader.vocab_size+=4096
+    if FLAGS.image_features:
+        img_features=np.load('img_features.npy')
+        if FLAGS.filter_null:
+            img_features=img_features[notnullIndexes.values]
+        if FLAGS.text_features:
+            data=np.concatenate((data,img_features),axis=1)
+        else:
+            data=img_features
+        dataLoader.vocab_size+=4096
     print "data shape: ", data.shape
     print "labels shape:",labels.shape
     tf.set_random_seed(FLAGS.random_state)
