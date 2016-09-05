@@ -33,6 +33,7 @@ python clf.py
 Features	|  Training Accuracy  |  Testing Accuracy  
 ------------|---------------------|-------------------
 Text     	|  0.54	              |  0.52		          
+Text(no nan)| 0.97     			  |  0.92
 Image     	|  0.94               |  0.71		          
 Text+Image  |  0.97               |  0.75		       
 
