@@ -16,6 +16,7 @@ tf.flags.DEFINE_string("model_dir", "model/", "Directory containing memn2n model
 tf.flags.DEFINE_boolean('train', True, 'if True, begin to train')
 tf.flags.DEFINE_boolean('main_categories', True, 'if True, use main_catogries')
 tf.flags.DEFINE_boolean('image_features', True, 'if True, use image_features')
+tf.flags.DEFINE_boolean('text_features', True, 'if True, use text_features')
 tf.flags.DEFINE_boolean('filter_null', False, 'if True, use filter null values in records')
 FLAGS = tf.flags.FLAGS
 
