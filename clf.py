@@ -119,6 +119,8 @@ def build_text_vocab(df):
 def main():
 
     df=pd.read_csv('records.csv', header=None)
+    notnullIndexes=df[1].notnull()
+    df=df[notnullIndexes]
     df[1]=df[1].str.lower()
     word2idx=build_text_vocab(df)
     label2id=build_label_vocab(df)
