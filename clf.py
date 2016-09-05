@@ -1,4 +1,4 @@
-from dataUtils import tokenize
+from dataUtils import tokenize,build_category_map
 from sklearn import metrics,cross_validation
 import tensorflow as tf
 import pandas as pd
@@ -23,7 +23,7 @@ class DataLoader(object):
         self.word2idx = word2idx
         self.label2id = label2id
         self.vocab_size=len(word2idx)
-        self.num_classes=len(label2id)
+        self.num_classes=len(set(label2id.values()))
         print "vocab_size",self.vocab_size
         print "num_classes ", self.num_classes
 
@@ -117,20 +117,20 @@ def build_text_vocab(df):
 
 
 def main():
-
     df=pd.read_csv('records.csv', header=None)
-    notnullIndexes=df[1].notnull()
-    df=df[notnullIndexes]
+    # notnullIndexes=df[1].notnull()
+    # df=df[notnullIndexes]
     df[1]=df[1].str.lower()
     word2idx=build_text_vocab(df)
-    label2id=build_label_vocab(df)
+    # label2id=build_label_vocab(df)
+    label2id=build_category_map('main_categories.csv')
     dataLoader=DataLoader(word2idx,label2id)
     data,labels=dataLoader.vectorize_text(df)
     img_features=np.load('img_features.npy')
-    img_features=img_features[notnullIndexes.values]
-    # data=np.concatenate((data,img_features),axis=1)
-    data=img_features
-    dataLoader.vocab_size=4096
+    # img_features=img_features[notnullIndexes.values]
+    data=np.concatenate((data,img_features),axis=1)
+    # data=img_features
+    dataLoader.vocab_size+=4096
     print "data shape: ", data.shape
     print "labels shape:",labels.shape
     tf.set_random_seed(FLAGS.random_state)

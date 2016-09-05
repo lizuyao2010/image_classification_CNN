@@ -11,6 +11,7 @@ from os.path import isfile, join
 import re
 from vgg16 import vgg16
 import tensorflow as tf
+import math
 
 def tokenize(sent):
     '''Return the tokens of a sentence including punctuation.
@@ -94,6 +95,17 @@ def downloadImages(outputFolder,source):
     for (i,url) in enumerate(df[0]):
         print url
         urllib.urlretrieve(url, outputFolder+str(i)+".jpg")
+
+def build_category_map(file_name):
+    df=pd.read_csv(file_name,delimiter='\t')
+    m=dict()
+    for row in df.values:
+        if math.isnan(row[2]):
+            m[row[1]]=row[0]
+        else:
+            m[row[1]]=int(row[2])
+    m['Others']=0
+    return m
 
 # def main():
     # connect_datapoint('https://test.flaunt.peekabuy.com/api/board/get_jc_product_images_batch/?page=')
