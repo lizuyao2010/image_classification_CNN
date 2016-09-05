@@ -127,7 +127,7 @@ def main():
     dataLoader=DataLoader(word2idx,label2id)
     data,labels=dataLoader.vectorize_text(df)
     img_features=np.load('img_features.npy')
-    img_features=img_features[notnullIndexes]
+    img_features=img_features[notnullIndexes[0]]
     data=np.concatenate((data,img_features),axis=1)
     dataLoader.vocab_size+=4096
     print "data shape: ", data.shape
