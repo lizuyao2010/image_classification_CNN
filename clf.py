@@ -128,8 +128,9 @@ def main():
     data,labels=dataLoader.vectorize_text(df)
     img_features=np.load('img_features.npy')
     img_features=img_features[notnullIndexes.values]
-    data=np.concatenate((data,img_features),axis=1)
-    dataLoader.vocab_size+=4096
+    # data=np.concatenate((data,img_features),axis=1)
+    data=img_features
+    dataLoader.vocab_size=4096
     print "data shape: ", data.shape
     print "labels shape:",labels.shape
     tf.set_random_seed(FLAGS.random_state)

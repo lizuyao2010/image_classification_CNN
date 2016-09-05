@@ -14,6 +14,10 @@
 	https://github.com/lizuyao2010/image_classification_CNN
 
 ### Data:
+	
+	data size: 33000
+
+	description not null: 18163
 
 	data split: 10% as test 
 
@@ -33,8 +37,13 @@ python clf.py
 Features	|  Training Accuracy  |  Testing Accuracy  
 ------------|---------------------|-------------------
 Text     	|  0.54	              |  0.52		          
-Text(no nan)| 0.97     			  |  0.92
+Text(no nan)|  0.97     		  |  0.92
 Image     	|  0.94               |  0.71		          
 Text+Image  |  0.97               |  0.75		       
 
+### remove null descriptions
 
+Features	|  Training Accuracy  |  Testing Accuracy  
+------------|---------------------|-------------------
+Text        | 0.97     			  |  0.92
+Text+Image  | 0.97                |  0.82		 
