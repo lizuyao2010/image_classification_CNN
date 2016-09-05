@@ -34,16 +34,20 @@ python clf.py
 
 ### Results:
 
+labels shape(33000,69)
+
 Features	|  Training Accuracy  |  Testing Accuracy  
 ------------|---------------------|-------------------
 Text     	|  0.54	              |  0.52		          
-Text(no nan)|  0.97     		  |  0.92
 Image     	|  0.94               |  0.71		          
 Text+Image  |  0.97               |  0.75		       
 
-### remove null descriptions
+### remove null descriptions:
+
+labels shape(18163,65)
 
 Features	|  Training Accuracy  |  Testing Accuracy  
 ------------|---------------------|-------------------
 Text        | 0.97     			  |  0.92
 Text+Image  | 0.97                |  0.82		 
+Text        | 0.93     			  |  0.78
