@@ -19,6 +19,7 @@ tf.flags.DEFINE_boolean('main_categories', True, 'if True, use main_catogries')
 tf.flags.DEFINE_boolean('image_features', True, 'if True, use image_features')
 tf.flags.DEFINE_boolean('text_features', True, 'if True, use text_features')
 tf.flags.DEFINE_boolean('filter_null', False, 'if True, use filter null values in records')
+tf.flags.DEFINE_boolean('softmax', True, 'if True, use softmax')
 FLAGS = tf.flags.FLAGS
 
 class DataLoader(object):
@@ -64,9 +65,10 @@ class LinearClassfier(object):
         with tf.variable_scope(self.name):
             self.W=tf.Variable(self.initializer([self.vocab_size,self.num_classes]),name='W')
         logits=tf.matmul(self.descriptions,self.W)
-        cross_entropy=tf.nn.softmax_cross_entropy_with_logits(logits,tf.cast(self.labels,tf.float32),name="cross_entropy")
-        cross_entropy_sum=tf.reduce_sum(cross_entropy,name="cross_entropy_sum")
-        loss_op=cross_entropy_sum
+        if FLAGS.softmax:
+            cross_entropy=tf.nn.softmax_cross_entropy_with_logits(logits,tf.cast(self.labels,tf.float32),name="cross_entropy")
+            cross_entropy_sum=tf.reduce_sum(cross_entropy,name="cross_entropy_sum")
+            loss_op=cross_entropy_sum
         if FLAGS.l2:
             regularizers=tf.nn.l2_loss(self.W,name="l2_loss")
             loss_op+=FLAGS.l2*regularizers
